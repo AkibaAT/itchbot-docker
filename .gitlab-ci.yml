@@ -1,0 +1,22 @@
+stages:
+  - deploy
+
+image: alpine:latest
+
+deploy:prod:
+  stage: deploy
+  tags:
+    - docker
+  environment:
+    name: Production
+    url: "https://rejaku.com/"
+  before_script:
+  - 'which ssh-agent || ( apk add openssh-client rsync )'
+  - mkdir -p ~/.ssh
+  - eval $(ssh-agent -s)
+  - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+  script:
+    - ssh-add <(echo "$PROD_KEY")
+    - ls -l
+    - rsync -avh --delete --exclude-from=rsync-excludes.txt . gitlab@rejaku.com:/opt/docker/
+    - ssh gitlab@rejaku.com 'cd /opt/docker && docker compose pull && docker compose up -d'

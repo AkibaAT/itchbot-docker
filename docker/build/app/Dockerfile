@@ -1,10 +1,12 @@
 FROM python:3.11-alpine
+COPY ./src /app
+COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN apk add \
-      git \
       py3-pip \
-    && git clone --depth 1 https://gitlab.com/rejaku/itchbot.git /app \
-    && cd /app \
-    && pip install -r requirements.txt
+    && addgroup -S app && adduser -S app -G app \
+    && chown -R app:app /app \
+    && pip install -r /app/requirements.txt
+USER app
 WORKDIR /app
-ENTRYPOINT ""
+ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["python", "main.py"]

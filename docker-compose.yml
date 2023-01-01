@@ -1,7 +1,7 @@
 x-traefik: &traefik
   image: traefik:2.9
 x-app: &app
-  image: registry.gitlab.com/rejaku/itchbot-docker/app:0.1
+  image: registry.gitlab.com/rejaku/itchbot-docker/app:0.3
 x-db: &db
   image: mariadb:10.10
 
@@ -30,6 +30,17 @@ services:
       - "traefik.http.routers.api.tls=true"
   app:
     <<: *app
+     # Ignore ARM64 builds for now
+    platform: linux/amd64
+    depends_on:
+      - db
+    environment:
+      - DB=${DB:-itchbot}
+      - DB_USER=${DB_USER:-docker}
+      - DB_PASSWORD=${DB_PASSWORD:-docker}
+      - DISCORD_API_KEY=${DISCORD_API_KEY}
+      - ITCH_API_KEY=${ITCH_API_KEY}
+      - ITCH_COLLECTION_ID=${ITCH_COLLECTION_ID}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.app.rule=Host(`${DOMAIN}`)"

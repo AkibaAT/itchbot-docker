@@ -1,0 +1,9 @@
+/.git
+/bin/build.sh
+/bin/scan.sh
+/backup
+/docker/build
+/.env
+/.gitlab-ci.yml
+/docker-compose.build.yml
+/rsync-excludes.txt
