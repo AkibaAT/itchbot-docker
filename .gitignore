@@ -1,0 +1,7 @@
+.DS_Store
+.idea
+docker-compose.override.yml
+/.env
+/app
+/backup/*
+!.gitkeep

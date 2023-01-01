@@ -1,0 +1,51 @@
+x-traefik: &traefik
+  image: traefik:2.9
+x-app: &app
+  image: registry.gitlab.com/rejaku/itchbot-docker/app:0.1
+x-db: &db
+  image: mariadb:10.10
+
+services:
+  traefik:
+    <<: *traefik
+    networks:
+      default:
+        aliases:
+          - "${DOMAIN}"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ${DOCKER_SOCK:-/var/run/docker.sock}:/var/run/docker.sock:ro
+      - /opt/persistent/traefik/acme.json:/acme.json
+      - ./docker/run/traefik/conf:/etc/traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashboard.rule=Host(`${DOMAIN_PROXY}`)"
+      - "traefik.http.routers.dashboard.service=dashboard@internal"
+      - "traefik.http.routers.dashboard.middlewares=dashboard_redirect@internal,dashboard_stripprefix@internal"
+      - "traefik.http.routers.dashboard.tls=true"
+      - "traefik.http.routers.api.rule=Host(`${DOMAIN_PROXY}`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.api.service=api@internal"
+      - "traefik.http.routers.api.tls=true"
+  app:
+    <<: *app
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.app.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.app.tls=true"
+  db:
+    <<: *db
+    environment:
+      - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD:-docker}
+      - MARIADB_DATABASE=${DB:-itchbot}
+      - MARIADB_USER=${DB_USER:-docker}
+      - MARIADB_PASSWORD=${DB_PASSWORD:-docker}
+    volumes:
+      - db:/var/lib/mysql
+
+volumes:
+  db:
+
+networks:
+  default:
