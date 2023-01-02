@@ -19,6 +19,7 @@ providers:
 
 api:
   dashboard: true
+  insecure: true
 
 certificatesResolvers:
   letsencrypt:
