@@ -1,4 +1,7 @@
 services:
-  app:
+  bot:
+    volumes:
+      - ./docker/build/app/src:/app
+  web:
     volumes:
       - ./docker/build/app/src:/app

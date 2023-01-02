@@ -11,3 +11,4 @@ USER app
 WORKDIR /app
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["python", "main.py"]
+EXPOSE 80
