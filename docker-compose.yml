@@ -1,7 +1,7 @@
 x-traefik: &traefik
   image: traefik:2.9
 x-app: &app
-  image: registry.gitlab.com/rejaku/itchbot-docker/app:0.3
+  image: registry.gitlab.com/rejaku/itchbot-docker/app:0.5
 x-db: &db
   image: mariadb:10.10
 
