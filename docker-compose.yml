@@ -47,6 +47,8 @@ services:
       - "traefik.http.routers.app.tls=true"
   db:
     <<: *db
+    ports:
+      - "127.0.0.1:3306:3306"
     environment:
       - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD:-docker}
       - MARIADB_DATABASE=${DB:-itchbot}
