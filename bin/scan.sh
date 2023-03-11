@@ -34,7 +34,7 @@ scan_images () {
       fi
       for variant in "${variants[@]}"; do
         imageWithTag=$(DOCKER_ENVIRONMENT=${variant} $DC config | yq e .services."${services[serviceIndex]}".image)
-        trivy image --exit-code $1 --ignore-unfixed --security-checks vuln --vuln-type os --severity HIGH,CRITICAL --no-progress ${imageWithTag}
+        trivy image --exit-code $1 --ignore-unfixed --scanners vuln --vuln-type os --severity HIGH,CRITICAL --no-progress ${imageWithTag}
       done
     fi
   done
