@@ -1,7 +1,7 @@
 x-traefik: &traefik
   image: traefik:2.9
 x-app: &app
-  image: registry.gitlab.com/rejaku/itchbot-docker/app:0.17
+  image: registry.gitlab.com/rejaku/itchbot-docker/app:0.18
   # Ignore ARM64 builds for now
   platform: linux/amd64
   depends_on:
@@ -15,7 +15,9 @@ services:
     networks:
       default:
         aliases:
-          - "${DOMAIN}"
+          - "${DOMAIN1}"
+          - "${DOMAIN2}"
+          - "${DOMAIN3}"
     ports:
       - "80:80"
       - "443:443"
@@ -52,13 +54,13 @@ services:
       - DISCORD_API_KEY
       - DISCORD_CLIENT_ID
       - DISCORD_CLIENT_SECRET
-      - DISCORD_REDIRECT_URI=https://${DOMAIN}/callback
+      - DISCORD_REDIRECT_URI=https://${DOMAIN2}/callback
       - FLASK_SECRET
       - ITCH_API_KEY
       - ITCH_COLLECTION_ID
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.web.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.web.rule=Host(`${DOMAIN1}`) || Host(`${DOMAIN2}`) || Host(`${DOMAIN3}`)"
       - "traefik.http.routers.web.tls=true"
   db:
     <<: *db

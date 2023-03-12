@@ -117,7 +117,7 @@ for service in "${services[@]}"; do
       echo "Build error in service ${service} (${variant}), aborting!" && exit $status
     fi
     echo "Running security scan on ${service} (${variant})"
-    trivy image --exit-code 1 --ignore-unfixed --security-checks vuln --vuln-type os --severity HIGH,CRITICAL ${imageWithTag}
+    trivy image --exit-code 1 --ignore-unfixed --scanners vuln --vuln-type os --severity HIGH,CRITICAL ${imageWithTag}
     if [ $PUSH = 1 ]; then
       echo "Push of ${service} (${variant}) completed."
     fi
