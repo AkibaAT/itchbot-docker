@@ -24,17 +24,6 @@ services:
     volumes:
       - ${DOCKER_SOCK:-/var/run/docker.sock}:/var/run/docker.sock:ro
       - ./docker/run/traefik/conf:/etc/traefik
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.middlewares.traefik-basicauth.basicauth.users=${TRAEFIK_AUTH}"
-      - "traefik.http.routers.dashboard.rule=Host(`${DOMAIN_PROXY}`)"
-      - "traefik.http.routers.dashboard.service=dashboard@internal"
-      - "traefik.http.routers.dashboard.middlewares=traefik-basicauth,dashboard_redirect@internal,dashboard_stripprefix@internal"
-      - "traefik.http.routers.dashboard.tls=true"
-      - "traefik.http.routers.api.rule=Host(`${DOMAIN_PROXY}`) && PathPrefix(`/api`)"
-      - "traefik.http.routers.api.service=api@internal"
-      - "traefik.http.routers.api.middlewares=traefik-basicauth"
-      - "traefik.http.routers.api.tls=true"
   bot:
     <<: *app
     networks:
@@ -85,3 +74,4 @@ volumes:
 
 networks:
   shared:
+    name: shared
