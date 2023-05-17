@@ -11,24 +11,15 @@ set -o errexit   ## set -e : exit the script if any statement returns a non-true
 #######################################
 
 GETOPT='getopt'
-READLINK='readlink'
 unamestr=`uname`
 if [ "$unamestr" == 'FreeBSD' -o "$unamestr" == 'Darwin'  ]; then
   GETOPT="$(brew --prefix)/opt/gnu-getopt/bin/getopt"
-  READLINK='greadlink'
 fi
 
-if [ -z "`which $READLINK`" ]; then
+if [ -z "`which $GETOPT`" ]; then
     echo "[ERROR] $GETOPT not installed"
     echo "        make sure gnu-getopt is installed"
     echo "        MacOS: brew install gnu-getopt"
-    exit 1
-fi
-
-if [ -z "`which $READLINK`" ]; then
-    echo "[ERROR] $READLINK not installed"
-    echo "        make sure coreutils are installed"
-    echo "        MacOS: brew install coreutils"
     exit 1
 fi
 
@@ -42,13 +33,6 @@ else
     echo "[ERROR] docker compose not installed"
     exit 1
 fi
-
-SCRIPT_DIR=$(dirname "$($READLINK -f "$0")")
-ROOT_DIR=$($READLINK -f "$SCRIPT_DIR/../")
-CODE_DIR=$($READLINK -f "$ROOT_DIR/app")
-
-BACKUP_DIR=$($READLINK -f "$ROOT_DIR/backup")
-CONFIG_DIR=$($READLINK -f "$ROOT_DIR/config")
 
 #######################################
 ## Functions

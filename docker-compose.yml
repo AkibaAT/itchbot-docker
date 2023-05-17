@@ -1,13 +1,13 @@
 x-traefik: &traefik
-  image: traefik:2.9
+  image: traefik:2.10
 x-app: &app
-  image: registry.gitlab.com/rejaku/itchbot-docker/app:0.25
+  image: registry.gitlab.com/rejaku/itchbot-docker/app:0.26
   # Ignore ARM64 builds for now
   platform: linux/amd64
   depends_on:
     - db
 x-db: &db
-  image: mariadb:10.10
+  image: mariadb:10.11
 
 services:
   traefik:
@@ -15,9 +15,7 @@ services:
     networks:
       shared:
         aliases:
-          - "${DOMAIN1}"
-          - "${DOMAIN2}"
-          - "${DOMAIN3}"
+          - "${DOMAIN}"
     ports:
       - "80:80"
       - "443:443"
@@ -47,13 +45,13 @@ services:
       - DISCORD_API_KEY
       - DISCORD_CLIENT_ID
       - DISCORD_CLIENT_SECRET
-      - DISCORD_REDIRECT_URI=https://${DOMAIN2}/callback
+      - DISCORD_REDIRECT_URI=https://${DOMAIN}/callback
       - FLASK_SECRET
       - ITCH_API_KEY
       - ITCH_COLLECTION_ID
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.web.rule=Host(`${DOMAIN1}`) || Host(`${DOMAIN2}`) || Host(`${DOMAIN3}`)"
+      - "traefik.http.routers.web.rule=Host(`${DOMAIN}`)"
       - "traefik.http.routers.web.tls=true"
   db:
     <<: *db
@@ -70,6 +68,7 @@ services:
       - db:/var/lib/mysql
 
 volumes:
+  redis:
   db:
 
 networks:

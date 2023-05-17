@@ -102,6 +102,7 @@ for service in "${services[@]}"; do
       cachePush=""
     fi
     DOCKER_ENVIRONMENT=${variant} docker buildx bake \
+      --provenance=false \
       -f docker-compose.yml \
       -f docker-compose.build.yml \
       --pull \
