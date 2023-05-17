@@ -2,8 +2,6 @@ x-traefik: &traefik
   image: traefik:2.10
 x-app: &app
   image: registry.gitlab.com/rejaku/itchbot-docker/app:0.26
-  # Ignore ARM64 builds for now
-  platform: linux/amd64
   depends_on:
     - db
 x-db: &db
