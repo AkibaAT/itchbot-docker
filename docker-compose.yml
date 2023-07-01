@@ -1,25 +1,11 @@
-x-traefik: &traefik
-  image: traefik:2.10
 x-app: &app
-  image: registry.gitlab.com/rejaku/itchbot-docker/app:0.26
+  image: registry.gitlab.com/rejaku/itchbot-docker/app:0.27
   depends_on:
     - db
 x-db: &db
   image: mariadb:10.11
 
 services:
-  traefik:
-    <<: *traefik
-    networks:
-      shared:
-        aliases:
-          - "${DOMAIN}"
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ${DOCKER_SOCK:-/var/run/docker.sock}:/var/run/docker.sock:ro
-      - ./docker/run/traefik/conf:/etc/traefik
   bot:
     <<: *app
     networks:
@@ -35,6 +21,7 @@ services:
     <<: *app
     networks:
       - shared
+      - web
     command: ["python", "web.py"]
     environment:
       - DB=${DB:-itchbot}
@@ -49,6 +36,7 @@ services:
       - ITCH_COLLECTION_ID
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=web"
       - "traefik.http.routers.web.rule=Host(`${DOMAIN}`)"
       - "traefik.http.routers.web.tls=true"
   db:
@@ -72,3 +60,6 @@ volumes:
 networks:
   shared:
     name: shared
+  web:
+    name: web
+    external: true

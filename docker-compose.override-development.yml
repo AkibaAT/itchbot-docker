@@ -1,7 +1,26 @@
+x-traefik: &traefik
+  image: traefik:2.10
+
 services:
+  traefik:
+    <<: *traefik
+    networks:
+      web:
+        aliases:
+          - "${DOMAIN}"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ${DOCKER_SOCK:-/var/run/docker.sock}:/var/run/docker.sock:ro
+      - ./docker/run/traefik/conf:/etc/traefik
   bot:
     volumes:
       - ./docker/build/app/src:/app
   web:
     volumes:
       - ./docker/build/app/src:/app
+
+networks:
+  web:
+    external: false

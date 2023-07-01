@@ -1,11 +1,4 @@
 services:
-  traefik:
-    volumes:
-      - /opt/persistent/traefik/acme.json:/acme.json
-    labels:
-      - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.api.tls.certresolver=letsencrypt"
-    restart: unless-stopped
   bot:
     restart: unless-stopped
   web:
