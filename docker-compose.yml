@@ -1,5 +1,5 @@
 x-app: &app
-  image: registry.gitlab.com/rejaku/itchbot-docker/app:0.27
+  image: registry.gitlab.com/rejaku/itchbot-docker/app:0.28
   depends_on:
     - db
 x-db: &db
