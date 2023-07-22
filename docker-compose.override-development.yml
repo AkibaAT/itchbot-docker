@@ -14,12 +14,6 @@ services:
     volumes:
       - ${DOCKER_SOCK:-/var/run/docker.sock}:/var/run/docker.sock:ro
       - ./docker/run/traefik/conf:/etc/traefik
-  bot:
-    volumes:
-      - ./docker/build/app/src:/app
-  web:
-    volumes:
-      - ./docker/build/app/src:/app
 
 networks:
   web:

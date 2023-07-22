@@ -1,0 +1,14 @@
+alembic
+bs4
+flake8
+Flask
+Flask-Discord
+mypy
+py-cord
+pymysql
+schedule
+sqlalchemy
+sqlalchemy2-stubs
+types-beautifulsoup4
+types-waitress
+waitress

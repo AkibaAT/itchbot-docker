@@ -1,7 +1,6 @@
 .DS_Store
 .idea
-docker-compose.override.yml
 /.env
+/app
 /backup/*
-/docker/build/app/src
 !.gitkeep

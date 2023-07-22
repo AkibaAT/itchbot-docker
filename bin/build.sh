@@ -50,7 +50,7 @@ fi
 for serviceIndex in "${!services[@]}"; do
   image=$($DC config | yq e .services."${services[serviceIndex]}".image)
   # Only try to build images for our registry
-  if [[ "${image}" == "registry.gitlab.com/rejaku/"* ]]; then
+  if [[ "${image}" == "ghcr.io/akibaat/"* ]]; then
       # Check if the current build version already exists in remote registry; Abort if it does
       docker manifest inspect "${image}" >/dev/null 2>&1 &&
         echo "Image ${image} already exists in registry, skipping" &&
