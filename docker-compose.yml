@@ -20,6 +20,7 @@ services:
       - DISCORD_API_KEY
       - ITCH_API_KEY
       - ITCH_COLLECTION_ID
+      - SDL_VIDEODRIVER=dummy
   web:
     <<: *app
     networks:
