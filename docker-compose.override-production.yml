@@ -2,8 +2,6 @@ services:
   bot:
     restart: unless-stopped
   web:
-    labels:
-      - "traefik.http.routers.web.tls.certresolver=letsencrypt"
     restart: unless-stopped
   db:
     restart: unless-stopped

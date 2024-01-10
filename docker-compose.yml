@@ -1,5 +1,5 @@
 x-app: &app
-  image: ghcr.io/akibaat/itchbot-docker/python:0.2
+  image: ghcr.io/akibaat/itchbot-docker/python:0.3
   depends_on:
     - db
 x-db: &db
@@ -44,7 +44,21 @@ services:
       - "traefik.enable=true"
       - "traefik.docker.network=web"
       - "traefik.http.routers.web.rule=Host(`${DOMAIN}`)"
-      - "traefik.http.routers.web.tls=true"
+      - "traefik.http.routers.web.tls=false"
+  reviews:
+    <<: *app
+    networks:
+      - shared
+    volumes:
+      - ./app:/app
+    command: ["python", "reviews.py"]
+    environment:
+      - DB=${DB:-itchbot}
+      - DB_USER=${DB_USER:-docker}
+      - DB_PASSWORD=${DB_PASSWORD:-docker}
+      - ITCH_USER
+      - ITCH_PASSWORD
+      - SDL_VIDEODRIVER=dummy
   db:
     <<: *db
     networks:
@@ -58,6 +72,7 @@ services:
       - MARIADB_PASSWORD=${DB_PASSWORD:-docker}
     volumes:
       - db:/var/lib/mysql
+      - ./backup:/backup
 
 volumes:
   redis:
