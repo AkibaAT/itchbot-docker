@@ -1,5 +1,5 @@
 x-app: &app
-  image: ghcr.io/akibaat/itchbot-docker/python:0.4
+  image: ghcr.io/akibaat/itchbot-docker/python:0.5
   depends_on:
     - db
 x-db: &db
