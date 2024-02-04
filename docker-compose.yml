@@ -20,6 +20,8 @@ services:
       - DISCORD_API_KEY
       - ITCH_API_KEY
       - ITCH_COLLECTION_ID
+      - ITCH_USER
+      - ITCH_PASSWORD
       - SDL_VIDEODRIVER=dummy
       - PYTHONUNBUFFERED=1
   web:
@@ -47,21 +49,6 @@ services:
       - "traefik.docker.network=web"
       - "traefik.http.routers.web.rule=Host(`${DOMAIN}`)"
       - "traefik.http.routers.web.tls=false"
-  reviews:
-    <<: *app
-    networks:
-      - shared
-    volumes:
-      - ./app:/app
-    command: ["python", "reviews.py"]
-    environment:
-      - DB=${DB:-itchbot}
-      - DB_USER=${DB_USER:-docker}
-      - DB_PASSWORD=${DB_PASSWORD:-docker}
-      - ITCH_USER
-      - ITCH_PASSWORD
-      - SDL_VIDEODRIVER=dummy
-      - PYTHONUNBUFFERED=1
   db:
     <<: *db
     networks:
