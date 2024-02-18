@@ -1,9 +1,9 @@
 x-app: &app
-  image: ghcr.io/akibaat/itchbot-docker/python:0.5
+  image: ghcr.io/akibaat/itchbot-docker/python:0.6
   depends_on:
     - db
 x-db: &db
-  image: mariadb:10.11
+  image: postgres:16.2
 
 services:
   bot:
@@ -15,7 +15,7 @@ services:
     command: ["python", "main.py"]
     environment:
       - DB=${DB:-itchbot}
-      - DB_USER=${DB_USER:-docker}
+      - DB_USER=${DB_USER:-itchbot}
       - DB_PASSWORD=${DB_PASSWORD:-docker}
       - DISCORD_API_KEY
       - ITCH_API_KEY
@@ -34,7 +34,7 @@ services:
     command: ["python", "web.py"]
     environment:
       - DB=${DB:-itchbot}
-      - DB_USER=${DB_USER:-docker}
+      - DB_USER=${DB_USER:-itchbot}
       - DB_PASSWORD=${DB_PASSWORD:-docker}
       - DISCORD_API_KEY
       - DISCORD_CLIENT_ID
@@ -54,14 +54,13 @@ services:
     networks:
       - shared
     ports:
-      - "127.0.0.1:3306:3306"
+      - "127.0.0.1:5432:5432"
     environment:
-      - MARIADB_ROOT_PASSWORD=${DB_ROOT_PASSWORD:-docker}
-      - MARIADB_DATABASE=${DB:-itchbot}
-      - MARIADB_USER=${DB_USER:-docker}
-      - MARIADB_PASSWORD=${DB_PASSWORD:-docker}
+      - POSTGRES_DB=${DB:-itchbot}
+      - POSTGRES_USER=${DB_USER:-itchbot}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-docker}
     volumes:
-      - db:/var/lib/mysql
+      - db:/var/lib/postgresql/data
       - ./backup:/backup
 
 volumes:

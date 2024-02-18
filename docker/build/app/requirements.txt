@@ -3,8 +3,8 @@ backoff
 bs4
 flake8
 Flask
-Flask-Discord
 mypy
+psycopg2-binary
 py-cord
 pymysql
 requests
