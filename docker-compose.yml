@@ -55,6 +55,14 @@ services:
       - "traefik.http.routers.web.tls=false"
   postgres:
     <<: *db
+    command:
+      - "postgres"
+      - "-c"
+      - "shared_preload_libraries=pg_stat_statements"
+      - "-c"
+      - "pg_stat_statements.track=all"
+      - "-c"
+      - "shared_buffers=6GB"
     networks:
       - shared
     environment:
