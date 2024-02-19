@@ -4,6 +4,10 @@ x-app: &app
     - db
 x-db: &db
   image: postgres:16.2
+x-pgbouncer: &pgbouncer
+  image: edoburu/pgbouncer
+  depends_on:
+    - postgres
 
 services:
   bot:
@@ -49,12 +53,10 @@ services:
       - "traefik.docker.network=web"
       - "traefik.http.routers.web.rule=Host(`${DOMAIN}`)"
       - "traefik.http.routers.web.tls=false"
-  db:
+  postgres:
     <<: *db
     networks:
       - shared
-    ports:
-      - "127.0.0.1:5432:5432"
     environment:
       - POSTGRES_DB=${DB:-itchbot}
       - POSTGRES_USER=${DB_USER:-itchbot}
@@ -62,6 +64,19 @@ services:
     volumes:
       - db:/var/lib/postgresql/data
       - ./backup:/backup
+  db:
+    <<: *pgbouncer
+    networks:
+      - shared
+    ports:
+      - "127.0.0.1:5432:5432"
+    environment:
+      - AUTH_TYPE=scram-sha-256
+      - DB_HOST=postgres
+      - DB_NAME=${DB:-itchbot}
+      - DB_USER=${DB_USER:-itchbot}
+      - DB_PASSWORD=${DB_PASSWORD:-docker}
+
 
 volumes:
   redis:
