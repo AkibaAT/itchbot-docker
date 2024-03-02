@@ -21,6 +21,7 @@ services:
       - DB=${DB:-itchbot}
       - DB_USER=${DB_USER:-itchbot}
       - DB_PASSWORD=${DB_PASSWORD:-docker}
+      - PROXY_LIST
       - PROXY_USER
       - PROXY_PASSWORD
       - DISCORD_API_KEY
