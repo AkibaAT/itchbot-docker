@@ -1,6 +1,8 @@
 services:
   bot:
     restart: unless-stopped
+  php-fpm:
+    restart: unless-stopped
   web:
     restart: unless-stopped
   db:

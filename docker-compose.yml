@@ -46,7 +46,7 @@ services:
       - APP_NAME="FVN.li"
       - APP_URL=https://${DOMAIN}
       - APP_KEY=${APP_KEY}
-      - DB_CONNECTION=pgsql
+      - DB_CONNECTION=db
       - DB_HOST=postgres
       - DB_PORT=5432
       - DB_DATABASE=${DB:-itchbot}
