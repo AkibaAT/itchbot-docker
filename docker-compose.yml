@@ -34,6 +34,7 @@ services:
   php-fpm:
     depends_on:
       - postgres
+      - redis
     build:
       context: .
       dockerfile: php.Dockerfile
@@ -52,6 +53,7 @@ services:
       - DB_DATABASE=${DB:-itchbot}
       - DB_USERNAME=${DB_USER:-itchbot}
       - DB_PASSWORD=${DB_PASSWORD:-docker}
+      - REDIS_HOST=redis
   web:
     image: nginx:latest
     depends_on:
@@ -104,6 +106,12 @@ services:
       - DB_NAME=${DB:-itchbot}
       - DB_USER=${DB_USER:-itchbot}
       - DB_PASSWORD=${DB_PASSWORD:-docker}
+  redis:
+    image: redis:latest
+    networks:
+      - shared
+    volumes:
+      - redis:/data
 
 
 volumes:
