@@ -14,6 +14,11 @@ services:
     volumes:
       - ${DOCKER_SOCK:-/var/run/docker.sock}:/var/run/docker.sock:ro
       - ./docker/run/traefik/conf:/etc/traefik
+  frankenphp:
+    depends_on:
+      - traefik
+    labels:
+      - "traefik.http.routers.web.tls=true"
 
 networks:
   web:
