@@ -68,8 +68,6 @@ services:
       - DB_PASSWORD=${DB_PASSWORD:-docker}
       - CADDY_GLOBAL_OPTIONS=debug
       - SERVER_NAME=${DOMAIN}:80
-    ports:
-      - "8080:80"
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=web"
