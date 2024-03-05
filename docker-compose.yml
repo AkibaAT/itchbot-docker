@@ -31,26 +31,45 @@ services:
       - ITCH_PASSWORD
       - SDL_VIDEODRIVER=dummy
       - PYTHONUNBUFFERED=1
-  web:
-    <<: *app
+  php-fpm:
+    depends_on:
+      - postgres
+    build:
+      context: .
+      dockerfile: php.Dockerfile
     networks:
       - shared
       - web
     volumes:
-      - ./app:/app
-    command: ["python", "web.py"]
+      - ./web:/app
+    environment:
+      - APP_NAME="FVN.li"
+      - APP_URL=https://${DOMAIN}
+      - APP_KEY=${APP_KEY}
+      - DB_CONNECTION=pgsql
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_DATABASE=${DB:-itchbot}
+      - DB_USERNAME=${DB_USER:-itchbot}
+      - DB_PASSWORD=${DB_PASSWORD:-docker}
+  web:
+    image: nginx:latest
+    depends_on:
+      - php-fpm
+    networks:
+      - shared
+      - web
+    volumes:
+      - ./web:/app
+      - ./default.conf:/etc/nginx/conf.d/default.conf
     environment:
       - DB=${DB:-itchbot}
       - DB_USER=${DB_USER:-itchbot}
       - DB_PASSWORD=${DB_PASSWORD:-docker}
-      - DISCORD_API_KEY
-      - DISCORD_CLIENT_ID
-      - DISCORD_CLIENT_SECRET
-      - DISCORD_REDIRECT_URI=https://${DOMAIN}/callback
-      - FLASK_SECRET
-      - ITCH_API_KEY
-      - ITCH_COLLECTION_ID
-      - PYTHONUNBUFFERED=1
+      - CADDY_GLOBAL_OPTIONS=debug
+      - SERVER_NAME=${DOMAIN}:80
+    ports:
+      - "8080:80"
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=web"
